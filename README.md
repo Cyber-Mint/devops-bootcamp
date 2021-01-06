@@ -82,6 +82,8 @@ git init
 - update wiki
 
 
+---
+
 ## S01.E02 Docker & Docker-Compose
 ### Prep
 - installing docker & docker-compose
@@ -106,6 +108,8 @@ mysql> source /sql/mydatabase.sql
 ### Self-Work
 - change to postgres:latest database
 - update wiki
+
+---
 
 ## S01.E03 Flyway
 
@@ -134,6 +138,8 @@ mysql> source /sql/mydatabase.sql
 - update wiki
 
 
+---
+
 ## S01.E04: OpenAPI & Swagger & Postman
 
 ### Prep
@@ -159,7 +165,10 @@ mysql> source /sql/mydatabase.sql
 - update wiki
 
 
+---
+
 ## S01.E05: Ansible + VMs (local + cloud) + Docker registry
+
 ### Prep
 
 - get an Azure or on-prem VM or local ubuntu vm with user vagrant & password ..
@@ -182,6 +191,8 @@ mysql> source /sql/mydatabase.sql
 - tag and push latest ToDo app to private docker registry
 - update wiki
 
+
+---
 
 ## S01.E06: Create CI/CD Orchestration + Jenkins + sonarqube Environment
 
@@ -209,6 +220,8 @@ docker run --name jenkins-blueocean --rm --detach --network jenkins --env DOCKER
 - update wiki
 
 
+---
+
 ## S01.E07: CI/CD Orchestration + Integration Testing + Github Integration
 
 ### Prep
@@ -227,6 +240,8 @@ docker run --name jenkins-blueocean --rm --detach --network jenkins --env DOCKER
 - research pipeline notifications to slack/MS Teams/rocketchat etc & try add to your pipeline
 
 
+
+---
 
 ## S01.E08: Everything as code
 
@@ -250,6 +265,8 @@ docker run --name jenkins-blueocean --rm --detach --network jenkins --env DOCKER
 - update wiki
 - tear-down and rebuild successfully
 
+---
+
 ## S01.E09: Just let me develop!
 
 ### Prep
@@ -269,6 +286,8 @@ docker run --name jenkins-blueocean --rm --detach --network jenkins --env DOCKER
 - add UI docker to deploy job (playbook + jenkins job)
 - register a cheap domain for your Todo app
 
+
+---
 
 ## S01.E10: Pipeline & Deployment Security
 
@@ -290,6 +309,8 @@ docker run --name jenkins-blueocean --rm --detach --network jenkins --env DOCKER
 - update wiki
 - continue to improve your ToDo app for pipeline showdown in final session 
 
+
+---
 
 ## S01.E11: End of Season 01
 
