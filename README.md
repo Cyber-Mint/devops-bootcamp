@@ -43,7 +43,7 @@ Grant Miller & Bank-Builder
 
 ## S01.E01: Introduction + GitHub + cli
 
-### Prep
+### [Preparation](resources/s01e01.md)
 - Techradar (focus on DevOps toolchain example)
 - DevOps Toolchain chart (with a few gaps for us to fill in together)
 - End Game picture (docker-compose with provision + harden + deploy + test + logs {graphana + promethius} )
