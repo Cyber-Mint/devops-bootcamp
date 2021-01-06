@@ -2,11 +2,15 @@
 
 ## Introduction
 
-This enablement programme is aimed at computer science lecturers & lab assistants who are actively involved in teaching programming courses and wish to be given hands-on experience of DevOps from an industry practitioners perspective. This is not intended to be an academic course.  It is however an opinionated collation of the most common DevOps tools & practices that all new software engineering graduates are expected to master soon after starting employment at most enterprises who operate medium to large technology teams.  This programme makes no assumptions about choice of programming language and can work equally well with python, Java or C# as development language of choice.  
+This enablement programme is aimed at computer science lecturers & lab assistants who are actively involved in teaching programming courses and wish to be given hands-on experience of DevOps from an industry practitioners perspective. This is not intended to be an academic course.  It is however an opinionated collation of the most common DevOps tools & practices that all new software engineering graduates are expected to master soon after starting employment at most enterprises who operate medium to large technology teams.  This programme makes no assumptions about choice of programming language and can work equally well with python, Java or C# as development language of choice.
+
+We will be building a simple multi-user **ToDo** application with a RESTful server as backend (& a separate database) and a ReactJS front end.  The practitioners approach to CI/CD pipeline will be to systematically build up our skills and experience with various aspects of the pipeline as we continue to expand our application on a week by week basis.  We will conclude the 11 week season with fully a functional application and a set of fully functional pipelines and reproducible CI/CD environments.
+
+The intention is that this process could be replicated by the lecturers with their students.  This is a low cost & low barrier to entry for experiencing CI/CD & practical DevOps as may be required by Industry today.
 
 ## Methodology
 
-The programme takes place over ten weeks.  For fun we have called this `SEASON 01`.  There are two x 2hr Google Teams sessions with the lecturers twice a week and daily 0.5 hr "stand-ups" on no session days to monitor self-work progress.  The attendees are broken into teams of two or three each with their team git repo & team wiki which is followed daily.
+The programme takes place over eleven weeks.  For fun we have called this `SEASON 01` and each week an episode eg `S01.E01`.  There will be two x 2hr Google Teams sessions with the lecturers each week and a compulsory 0.5 hr daily "stand-ups" on no-session days to monitor self-work progress.  The attendees are broken into teams of two or three, each with their own team git repo & team wiki which is published to daily.
 
 ## Facilitator(s)
 
@@ -33,6 +37,7 @@ Grant Miller & Bank-Builder
 - install Ubuntu Server LTS with ONLY ssh + user: vagrant + pw: whatever
 - turn external access off until we are ready
 - these can be Azure/on-prem VM's (turn them off when not in use)
+
 
 ---
 
@@ -293,13 +298,13 @@ docker run --name jenkins-blueocean --rm --detach --network jenkins --env DOCKER
 eg. kubernetes, the various pipelines like git, azure, aws, circleci, other cloud services eg jfrog etc
 - secure application development
 - docker security
-- hint at what changes are coming ... eg containerd , etc ..
+- hint at what changes are coming ... eg `containerd` , etc ..
 
 
 ### Session
 - Showdown between teams of their Applications & Pipelines
 - Discussion of lessons learned
-- A list of things yet unseen (all teh devops stuff we did not cover in this Season 01)
+- A list of things yet unseen (all the DevOps stuff we did not cover in this Season 01)
 
 ### Self-Work
 - learning never stops
