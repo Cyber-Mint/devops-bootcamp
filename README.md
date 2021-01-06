@@ -334,6 +334,6 @@ eg. kubernetes, the various pipelines like git, azure, aws, circleci, other clou
 
 
 ---
-[MIT Licensed](./LICENSE) and prepared for Varsity College by [Cyber-Mint (Pty) Ltd](https://www.cyber-mint.com)<br>
+[MIT Licensed](LICENSE) and prepared for Varsity College by [Cyber-Mint (Pty) Ltd](https://www.cyber-mint.com)<br>
 &copy; Copyright 2020, Cyber-Mint (Pty) Ltd.  
 
