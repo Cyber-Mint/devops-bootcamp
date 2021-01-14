@@ -9,7 +9,7 @@ This enablement programme is aimed at computer science lecturers & lab assistant
 
 We will be building a simple multi-user **ToDo** application with a RESTful server as backend (& a separate database) and a ReactJS front end.  The practitioners approach to CI/CD pipeline will be to systematically build up our skills and experience with various aspects of the pipeline as we continue to expand our application on a week by week basis.  We will conclude the 11 week season with fully a functional application and a set of fully functional pipelines and reproducible CI/CD environments.
 
-The intention is that this process could be replicated by the lecturers with their students.  This is a low cost & low barrier to entry for experiencing CI/CD & practical DevOps as may be required by Industry today.
+The intention is that this process could be replicated by the lecturers with their students.  The aim to enable a low cost & low barrier to entry experience of CI/CD & practical DevOps as may be required by Industry today.
 
 ## Methodology
 
@@ -17,9 +17,10 @@ The programme takes place over eleven weeks.  For fun we have called this `SEASO
 
 ## Facilitator(s)
 
-```
-Grant Miller & Bank-Builder
-```
+
+> * [Grant Miller](https://github.com/gm7)
+> * [Bank-Builder](https://github.com/bank-builder)
+
 
 
 
