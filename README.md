@@ -1,8 +1,11 @@
-# A Practitioners Approach to DevOps
+# DevOps BootCamp 2021
+**A Practitioners Approach to DevOps**
 
 ## Introduction
 
-This enablement programme is aimed at computer science lecturers & lab assistants who are actively involved in teaching programming courses and wish to be given hands-on experience of DevOps from an industry practitioners perspective. This is not intended to be an academic course.  It is however an opinionated collation of the most common DevOps tools & practices that all new software engineering graduates are expected to master soon after starting employment at most enterprises who operate medium to large technology teams.  This programme makes no assumptions about choice of programming language and can work equally well with python, Java or C# as development language of choice.
+This enablement programme is aimed at computer science lecturers & lab assistants who are actively involved in teaching programming courses and wish to be given hands-on experience of DevOps from an industry practitioners perspective. This is not intended to be an academic course.  It is however an opinionated collation of some common DevOps tools & practices that all new software engineering graduates are expected to master soon after starting employment at most enterprises who operate medium to large technology teams.  This programme makes no assumptions about choice of programming language and can work equally well with python, Java or C# as development language of choice.
+
+![TeamFU](resources/images/Teamfu-task-view.png)
 
 We will be building a simple multi-user **ToDo** application with a RESTful server as backend (& a separate database) and a ReactJS front end.  The practitioners approach to CI/CD pipeline will be to systematically build up our skills and experience with various aspects of the pipeline as we continue to expand our application on a week by week basis.  We will conclude the 11 week season with fully a functional application and a set of fully functional pipelines and reproducible CI/CD environments.
 
