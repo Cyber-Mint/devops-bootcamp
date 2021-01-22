@@ -339,5 +339,6 @@ eg. kubernetes, the various pipelines like git, azure, aws, circleci, other clou
 
 ---
 [MIT Licensed](LICENSE) and prepared for Varsity College by [Cyber-Mint (Pty) Ltd](https://www.cyber-mint.com)<br>
+TeamFu &trade; is trademark of Cyber-Mint (Pty) Ltd.<br>
 &copy; Copyright 2020, Cyber-Mint (Pty) Ltd.  
 
