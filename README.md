@@ -62,20 +62,6 @@ The programme takes place over eleven weeks.  For fun we have called this `SEASO
 - Github :: git tips + PR's, + Wiki + 
 - git
 - linux command line in 30 minutes
-```
-sudo apt-get update -y && sudo apt upgrade -y
-sudo apt-get install terminator
-sudo apt get install git
-git --help
-# add ssh key + git settings
-# useful git commands
-cd ~
-mkdir -p dev/wiki
-cd ~/dev/wiki
-git init
-# touch and push
-# java hello world todo application + simple unit tests
-```
 - setup one repo per three lecturers
 - add branch rules + enforce PRs on wiki and hello-world repo
 
@@ -84,6 +70,7 @@ git init
 - read up on swagger & openapi specification
 - update your wiki with learnings so far
 - update wiki
+- work on your TeamFu UI (Vue.js/Reactjs/whatever you prefer)
 
 
 ---
