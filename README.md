@@ -51,8 +51,8 @@ The programme takes place over eleven weeks.  For fun we have called this `SEASO
 - Techradar (focus on DevOps toolchain example)
 - DevOps Toolchain chart (with a few gaps for us to fill in together)
 - End Game picture (docker-compose with provision + harden + deploy + test + logs {graphana + promethius} )
-- git & github
-- linux shell
+- introducing git & github
+- introducing the linux shell
 - vision board for a Team based ToDo app with CLI, Rest API & React Front End ...
 - any language : python/Java/c#/whatever-rocks-your-boat
 
