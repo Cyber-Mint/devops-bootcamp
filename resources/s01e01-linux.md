@@ -234,5 +234,10 @@ references :
 * https://ryanstutorials.net/linuxtutorial/
 * [sh & cli cheatsheet](https://www.lolicatgirls.com/g/software/CLI-and-SH-Commands.png)
 
-------
-[Readme](../README.md) | [Session 1](s01e01.md) 
+---
+[Readme](../README.md) | [Session 1](s01e01.md)
+
+---
+[MIT Licensed](LICENSE) and prepared for Varsity College by [Cyber-Mint (Pty) Ltd](https://www.cyber-mint.com)<br>
+TeamFu &trade; is trademark of Cyber-Mint (Pty) Ltd.<br>
+&copy; Copyright 2020, Cyber-Mint (Pty) Ltd.  
