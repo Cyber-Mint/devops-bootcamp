@@ -233,3 +233,6 @@ references :
 * https://ubuntu.com/tutorials/command-line-for-beginners#1-overview
 * https://ryanstutorials.net/linuxtutorial/
 * [sh & cli cheatsheet](https://www.lolicatgirls.com/g/software/CLI-and-SH-Commands.png)
+
+------
+[Readme](../README.md) | [Session 1](s01e01.md) 
