@@ -42,7 +42,6 @@ The programme takes place over eleven weeks.  For fun we have called this `SEASO
 - turn external access off until we are ready
 - these can be Azure/on-prem VM's (turn them off when not in use)
 
-
 ---
 
 ## S01.E01: Introduction + GitHub + cli
