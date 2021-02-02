@@ -1,6 +1,6 @@
 # DevOps BootCamp 2021
 **A Practitioners Approach to DevOps**
-
+ 
 ## Introduction
 
 This enablement programme is aimed at computer science lecturers & lab assistants who are actively involved in teaching programming courses and wish to be given hands-on experience of DevOps from an industry practitioners perspective. This is not intended to be an academic course.  It is however an opinionated collation of some common DevOps tools & practices that all new software engineering graduates are expected to master soon after starting employment at most enterprises who operate medium to large technology teams.  This programme makes no assumptions about choice of programming language and can work equally well with python, Java or C# as development language of choice.
