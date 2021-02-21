@@ -1,21 +1,25 @@
-/* Drop the database if it exists and recreate it. 
-*  (be careful using this as it will erase any data in an existing database)
+/*
+* Create a table or two
 */
-USE master
-IF EXISTS(select * from sys.databases where name='teamfu')
-DROP DATABASE teamfu
 
-CREATE DATABASE teamfu
-ON   
-( NAME = teamfu_dat,  
-    FILENAME = '/var/opt/mssql/data/teamfu_data.mdf',  
-    SIZE = 10,  
-    MAXSIZE = 50,  
-    FILEGROWTH = 5 )  
-LOG ON  
-( NAME = teamfu_log,
-    FILENAME = '/var/opt/mssql/data/teamfu_log.ldf',  
-    SIZE = 5MB,  
-    MAXSIZE = 25MB,  
-    FILEGROWTH = 5MB ) ;  
-GO
+USE teamfu;
+IF (OBJECT_ID(N'[dbo].[lists]','U') IS NULL)
+BEGIN
+  CREATE TABLE [dbo].[lists]
+  (
+    list_id INT NOT NULL IDENTITY PRIMARY KEY,
+    list_name VARCHAR(255),
+    list_owner_id INT
+  );
+END
+
+IF (OBJECT_ID(N'[dbo].[tasks]','U') IS NULL)
+BEGIN
+  CREATE TABLE [dbo].[tasks]
+  (
+    task_id INT NOT NULL IDENTITY PRIMARY KEY,
+    task_name VARCHAR(255),
+    task_description VARCHAR(255),
+    task_owner_id INT
+  );
+END

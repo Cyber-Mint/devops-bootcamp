@@ -78,16 +78,31 @@ docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Y
 ### Create a database using an init script
 ```
 cd samples/s01e03
+sudo cp scripts/db-create.sql mssql/sql/
+docker exec -it s01e03_db_1 ls -lt /tmp/sql/
+```
+Initialize the database
+```
+docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -i "/tmp/sql/db-create.sql"
+```
+Did it work? Can you see `teamfu` database?
+```
+docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -Q "SELECT name, database_id, create_date FROM sys.databases;"
+```
+
+### Initialize the database tables
+```
+cd samples/s01e03
 sudo cp scripts/db-init.sql mssql/sql/
 docker exec -it s01e03_db_1 ls -lt /tmp/sql/
 ```
 Initialize the database
 ```
-docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -i "/tmp/sql/db-init.sql"
+docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -d teamfu -i "/tmp/sql/db-init.sql"
 ```
 Did it work? Can you see `teamfu` database?
 ```
-docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -Q "SELECT name, database_id, create_date FROM sys.databases;"
+docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -d teamfu -Q "SELECT * FROM information_schema.tables;"
 ```
 
 ### References
