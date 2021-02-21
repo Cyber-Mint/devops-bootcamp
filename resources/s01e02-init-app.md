@@ -6,7 +6,7 @@ This a quick introduction to initializing your app in some of the common framewo
 [Installing .net core on Ubuntu](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu)
 
 ### C# Web API Tutorial
-[Useful tutorial for MS .net web api](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-5.0&tabs=visual-studio)
+[Useful tutorial for MS .net web api](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-5.0&tabs=visual-studio-code)
 
 ![Architecture](images/msdotnet-architecture.png)
 
@@ -64,7 +64,7 @@ There are numerous docker images available for databases, below are some of the 
 [Useful samples in various languages](https://todobackend.com/)
 
 ------
-[Readme](../README.md) | [Session 1](s01e01.md)
+[Readme](../README.md) | [Session 2](s01e02.md)
 
 ---
 [MIT Licensed](LICENSE) and prepared for Varsity College by [Cyber-Mint (Pty) Ltd](https://www.cyber-mint.com)<br>

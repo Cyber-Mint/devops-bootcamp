@@ -1,0 +1,25 @@
+version: "3.2"
+
+services:  
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
+    # https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables?view=sql-server-2017
+    environment: 
+      SA_PASSWORD: "Your_secret123!"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_TCP_PORT: 1433
+    user: root 
+    ports:
+      - 1433:1433
+    volumes:
+      - ./mssql/data:/var/opt/mssql/data
+      - ./mssql/log:/var/opt/mssql/log
+      - ./mssql/secrets:/var/opt/mssql/secrets
+      - ./mssql/sql:/tmp/sql
+    networks: 
+      - demo-mssql
+    
+networks:
+  demo-mssql:
