@@ -4,9 +4,9 @@ services:
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     restart: always
-    # https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables?view=sql-server-2017
+    # https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-configure-environment-variables?view=sql-server-2019
     environment: 
-      SA_PASSWORD: "Your_secret123!"
+      SA_PASSWORD: "Your_secret123"
       ACCEPT_EULA: "Y"
       MSSQL_PID: Developer
       MSSQL_TCP_PORT: 1433

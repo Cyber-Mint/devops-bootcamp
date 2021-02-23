@@ -19,7 +19,7 @@ This guide focuses on .net EF core and Flyway SQL-based migrations to give an in
 ## Flyway 
 The first thing to check is whether the database you plan to use is supported by Flyway. For this document we assume [MS SQL Server](https://flywaydb.org/documentation/database/sqlserver). [Check the docs here](https://flywaydb.org/documentation/).
 
-We also focus on the [Flyway command line tool](https://flywaydb.org/documentation/usage/commandline/) rather than embedded tools such as Maven. Rather than install the tool locally, we prefer to use [the docker image](https://hub.docker.com/r/flyway/flyway). If you do want to run flyway against a docker hosted database, remember that it must be on the same docker network.
+We also focus on the [Flyway command line tool](https://flywaydb.org/documentation/usage/commandline/) rather than embedded tools such as Maven/Gradle. Rather than install the tool locally, we prefer to use [the docker image](https://hub.docker.com/r/flyway/flyway). If you do want to run flyway against a docker hosted database, remember that it must be on the same docker network.
 
 
 
@@ -41,6 +41,51 @@ Flyway CLI only has seven commands:
 
 If you are starting with an existing database (or following a database first paradigm) then [this is a useful guide](https://www.entityframeworktutorial.net/efcore/create-model-for-existing-database-in-ef-core.aspx)
 
+### Detailed notes for creating your .net core webapi
+We use [this useful reference tutorial as our starting point for MS .net web api](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-5.0&tabs=visual-studio-code)
+
+```bash
+cd src
+dotnet new webapi -o Teamfu-be
+cd Teamfu-be/
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 5.0.3
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 5.0.3
+dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
+dotnet tool install -g dotnet-aspnet-codegenerator
+dotnet tool update -g dotnet-aspnet-codegenerator
+dotnet tool install --global dotnet-ef
+dotnet tool update --global dotnet-ef
+dotnet dev-certs https --trust
+dotnet restore
+dotnet run
+```
+[Click here to test if your app is running](http://localhost:5000/WeatherForecast)
+
+Quick create of the database (more detailed instructions below):
+```
+cd quickstart
+docker-compose -f docker-compose.yml up -d
+sudo cp scripts/db-create.sql mssql/sql/
+sudo cp scripts/db-init.sql mssql/sql/
+sudo cp scripts/db-insert-test-data.sql mssql/sql/
+docker exec -it quickstart_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123" -i "/tmp/sql/db-create.sql"
+docker exec -it quickstart_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123" -i "/tmp/sql/db-init.sql"
+docker exec -it quickstart_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123" -i "/tmp/sql/db-insert-test-data.sql"
+```
+
+Run the following to scaffold your database
+```
+cd src/Teamfu-be
+dotnet ef dbcontext scaffold "Data Source=localhost,1433;Database=teamfu;User Id=SA;Password=Your_secret123;" Microsoft.EntityFrameworkCore.SqlServer -o Models
+```
+Take your database connection string out of code and into environment variables. Add the database context and set the default launch url.
+
+Generate your controller
+```
+dotnet aspnet-codegenerator controller -name TeamfuItemsController -async -api -m Task -dc teamfuContext -outDir Controllers
+```
+Fully qualify the `Task` model in the newly generated controller.
+
 
 ### asp.net core healthcheck
 In order for docker to confirm that a service is up and running it can call a well defined [Healthcheck](https://docs.docker.com/engine/reference/builder/#healthcheck).
@@ -61,48 +106,70 @@ If using 2019 version, you must run as `root` to access volumes.
 
 Once running, try the following:
 ```
-docker exec -it s01e03_db_1 /bin/bash
-/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!"
+docker exec -it quickstart_db_1 /bin/bash
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123"
 SELECT @@VERSION;
 ```
 Simplify this:
 ```
-docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!"
+docker exec -it quickstart_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123"
 SELECT @@VERSION;
 ```
 Simplify this:
 ```
-docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -Q "SELECT @@VERSION;"
+docker exec -it quickstart_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123" -Q "SELECT @@VERSION;"
 ```
 
 ### Create a database using an init script
 ```
 cd samples/s01e03
 sudo cp scripts/db-create.sql mssql/sql/
-docker exec -it s01e03_db_1 ls -lt /tmp/sql/
+docker exec -it quickstart_db_1 ls -lt /tmp/sql/
 ```
 Initialize the database
 ```
-docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -i "/tmp/sql/db-create.sql"
+docker exec -it quickstart_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123" -i "/tmp/sql/db-create.sql"
 ```
 Did it work? Can you see `teamfu` database?
 ```
-docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -Q "SELECT name, database_id, create_date FROM sys.databases;"
+docker exec -it quickstart_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123" -Q "SELECT name, database_id, create_date FROM sys.databases;"
 ```
 
-### Initialize the database tables
+# Initialize the database tables
+Use your SQL file to initialize the database.
 ```
 cd samples/s01e03
 sudo cp scripts/db-init.sql mssql/sql/
-docker exec -it s01e03_db_1 ls -lt /tmp/sql/
+docker exec -it quickstart_db_1 ls -lt /tmp/sql/
 ```
+
 Initialize the database
 ```
-docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -d teamfu -i "/tmp/sql/db-init.sql"
+docker exec -it quickstart_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123" -d teamfu -i "/tmp/sql/db-init.sql"
 ```
 Did it work? Can you see `teamfu` database?
 ```
-docker exec -it s01e03_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123!" -d teamfu -Q "SELECT * FROM information_schema.tables;"
+docker exec -it quickstart_db_1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Your_secret123" -d teamfu -Q "SELECT * FROM information_schema.tables;"
+```
+
+### Ubuntu Hyper-V Screen resolution
+How to change your screen resolution if you're using Ubuntu 20.04 on Hyper-V:
+```
+sudo nano /etc/default/grub
+```
+
+Now, change this line: 
+```
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash" To this. GRUB_CMDLINE_LINUX_DEFAULT="quiet splash video=hyperv_fb:1920x1080"
+```
+Now update grub: 
+```
+sudo update-grub
+```
+
+Now reboot:
+```
+sudo reboot
 ```
 
 ### References

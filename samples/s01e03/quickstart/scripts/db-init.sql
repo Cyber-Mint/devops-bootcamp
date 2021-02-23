@@ -20,6 +20,7 @@ BEGIN
     task_id INT NOT NULL IDENTITY PRIMARY KEY,
     task_name VARCHAR(255),
     task_description VARCHAR(255),
-    task_owner_id INT
+    owner_id INT,
+    percent_complete TINYINT,
   );
 END
