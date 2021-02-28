@@ -1,0 +1,1719 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Teamfu API
+  description: >-
+    This is a RESTful API that provides developer friendly service to 
+    creating lists of tasks.
+servers:
+  - url: 'localhost/api'
+tags:
+  - name: lists
+    description: Access lists of tasks  
+paths:
+  '/lists':
+    get:
+      tags:
+        - lists
+      summary: Get the available lists
+      description: >-
+        Return the lists of tasks
+      operationId: getLists
+      parameters:
+        - name: byAggregate
+          in: path
+          required: true
+          description: Provide an aggregate for the trade frequency
+          schema:
+            type: string
+            nullable: false
+            enum:
+              - bank
+              - trader
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 1000
+                items:
+                  $ref: '#/components/schemas/TradeFrequency'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Aggregate not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /tasks:
+    get:
+      tags:
+        - trading
+      summary: Get the list of Trades
+      description: >-
+        Return the collection of Trades. Available filters on Trade Status, Bank
+        and JV partner. Paginated response. 
+      operationId: getTrades
+      parameters:
+        - name: filterStatus
+          in: query
+          required: false
+          description: >-
+            A search query filter on the status of the trade. Will return only
+            trades that have the specified status
+          schema:
+            $ref: '#/components/schemas/TradeStatus'
+        - name: filterBank
+          in: query
+          required: false
+          description: >-
+            A search query filter on the Bank name. Will return only clients
+            with accounts at the specified Bank
+          schema:
+            $ref: '#/components/schemas/BankId'
+        - name: filterJV
+          in: query
+          required: false
+          description: >-
+            A search query filter on the Joint Venture partner linked to the
+            client. Will return only clients liked to the specified JV.
+          schema:
+            $ref: '#/components/schemas/JVPartnerId'
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 1
+            format: int32
+            default: 1
+            nullable: true
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            format: int32
+            default: 10
+            nullable: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradesFiltered'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - trading
+      description: Create a new trade manually
+      summary: Create a new trade.
+      operationId: createTrade
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TradeSubmit'
+      responses:
+        '200':
+          description: Successful. Trade created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trade'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized create trades.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/trades/{tradeId}':
+    get:
+      tags:
+        - trading
+      summary: Get a specific trade
+      description: Return a single trade based on its unique identifier
+      operationId: getTradeById
+      parameters:
+        - name: tradeId
+          in: path
+          required: true
+          description: The unique Trade identifier
+          schema:
+            type: number
+            format: int64
+            minimum: 1
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trade'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Trade not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - trading
+      summary: update a specific trade
+      description: Update a single trade based on its unique identifier
+      operationId: updateTrade
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trade'
+      parameters:
+        - name: tradeId
+          in: path
+          required: true
+          description: The unique Trade identifier
+          schema:
+            type: number
+            format: int64
+            minimum: 1
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trade'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Trade not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /clients:
+    get:
+      tags:
+        - clients
+      summary: Get the list of Clients
+      description: >-
+        Return the collection of clients. Available filters on Bank and JV
+        partner. Paginated response. 
+      operationId: getClients
+      parameters:
+        - name: filterBank
+          in: query
+          required: false
+          description: >-
+            A search query filter on the Bank name. Will return only clients
+            with accounts at the specified Bank
+          schema:
+            $ref: '#/components/schemas/BankId'
+        - name: filterJV
+          in: query
+          required: false
+          description: >-
+            A search query filter on the Joint Venture partner linked to the
+            client. Will return only clients liked to the specified JV.
+          schema:
+            $ref: '#/components/schemas/JVPartnerId'
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 1
+            format: int32
+            default: 1
+            nullable: true
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            format: int32
+            default: 10
+            nullable: true
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientsFiltered'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/clients/{clientId}':
+    get:
+      tags:
+        - clients
+      summary: Get a single client
+      description: >-
+        Return the specified client if the client id is valid and user has
+        permission to access.
+      operationId: getClientById
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          description: The unique client identifier
+          schema:
+            type: number
+            format: int32
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/IndividualLite'
+                  - $ref: '#/components/schemas/JuristicLite'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Client not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /banks:
+    get:
+      tags:
+        - banks
+      summary: Get the Bank information
+      description: Return the collection of partner Banks with information
+      operationId: getBanks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankList'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/banks/{bankId}':
+    get:
+      tags:
+        - banks
+      summary: Get the Bank information
+      description: Return the collection of partner Banks with information
+      operationId: getBankById
+      parameters:
+        - name: bankId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/BankId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dealers:
+    get:
+      tags:
+        - trading
+      summary: Get the list of Dealers
+      description: Return the collection of Dealer (Trader)
+      operationId: getDealers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DealerList'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/dealers/{dealerId}':
+    get:
+      tags:
+        - trading
+      summary: Get the requested Dealer
+      description: Return the Dealer (Trader) specified by the unique identifier
+      operationId: getDealerById
+      parameters:
+        - name: dealerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DealerId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dealer'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /jointventures:
+    get:
+      tags:
+        - trading
+      summary: Get the list of JV Partners
+      description: Return the collection of Joint Venture Partners
+      operationId: getJVPartners
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JVPartnerList'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/jointventures/{jointVentureId}':
+    get:
+      tags:
+        - trading
+      summary: Get the requested Joint Venture Partner
+      description: Return the Joint Venture Partner specified by the unique identifier
+      operationId: getJVById
+      parameters:
+        - name: jointVentureId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/JVPartnerId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JVPartner'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/documents/{documentId}':
+    get:
+      tags:
+        - documents
+      summary: Return the specified document
+      description: Return the requested document using the unique identifier
+      operationId: getDocumentById
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DocumentId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Document not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/documents/clients/{clientId}':
+    get:
+      tags:
+        - documents
+      summary: Return the documents relating to a client
+      description: >-
+        Return the collection of documents associated to a client. Use the id
+        with the `/documents/{documentId}` to return the actual document.
+      operationId: getDocumentsByClientId
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ClientId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentList'
+        '204':
+          description: No Documents Found
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Document not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /notify:
+    post:
+      tags:
+        - notifications
+      summary: Send a notification
+      description: 'Send a WhatsApp, Email or SMS notification'
+      operationId: sendNotification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendBody'
+      responses:
+        '204':
+          description: OK
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/lookups/bop/{outbound}':
+    get:
+      tags:
+        - lookups
+      summary: Return the outbound or inbound BOP Codes
+      description: >-
+        Return either the
+        [inbound](https://www.rmbprivatebank.com/downloads/RMBPrivateBank/SARB_BoP_Codes_for_Inwards_Transactions.pdf)
+        or
+        [outbound](https://www.rmbprivatebank.com/downloads/RMBPrivateBank/SARB_BoP_Codes_for_Outward_Transactions.pdf)
+        Balance of Payment Codes
+      operationId: getBOPCodes
+      parameters:
+        - name: outbound
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/BopOutbound'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BOPCodeList'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Document not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /lookups/currencies:
+    get:
+      tags:
+        - lookups
+      summary: Return the list of supported currencies
+      description: Return the collection of supported currencies.
+      operationId: getCurrencies
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrencyISOList'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Document not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Bank:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/BankId'
+        name:
+          $ref: '#/components/schemas/BankName'
+        image:
+          $ref: '#/components/schemas/ImageUrl'
+        trading:
+          $ref: '#/components/schemas/BankOperation'
+        bopSubmission:
+          $ref: '#/components/schemas/BankOperation'
+        tradingCurrencies:
+          $ref: '#/components/schemas/CurrencyISOList'
+      additionalProperties: false
+    BankId:
+      type: number
+      format: int32
+      minimum: 1
+      maximum: 2147483646
+      example: 2
+      additionalProperties: false
+    BankName:
+      type: string
+      minLength: 0
+      maxLength: 100
+      nullable: true
+      example: Investec
+      additionalProperties: false
+    BankOperation:
+      type: object
+      properties:
+        start:
+          description: Start time for operation. Only the `time` component should be used.
+          type: string
+          format: date-time
+          example: '2017-07-21T07:30:00Z'
+        end:
+          description: End time for operation. Only the `time` component should be used.
+          type: string
+          format: date-time
+          example: '2017-07-21T11:00:00Z'
+        dow:
+          description: List of the days of the week for operation.
+          type: array
+          items:
+            type: string
+            maxLength: 15
+            minLength: 0
+            nullable: false
+            example:
+              - Sunday
+              - Monday
+              - Tuesday
+              - Wednesday
+              - Thursday
+              - Friday
+              - Saturday
+    BankList:
+      type: array
+      maxItems: 1000
+      items:
+        $ref: '#/components/schemas/Bank'
+      additionalProperties: false
+    BopOutbound:
+      description: 'Is the BOP being requested outbound? If not, then inbound.'
+      type: boolean
+      default: true
+    BOPCode:
+      description: A Balance of Payment (BoP) Code
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/BOPCodeId'
+        category:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: Imports
+          nullable: false
+        bopCode:
+          type: string
+          minLength: 1
+          maxLength: 3
+          example: '103'
+          nullable: false
+        subCode:
+          type: string
+          minLength: 1
+          maxLength: 2
+          example: '07'
+          nullable: false
+        description:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: Import payment - Diamonds
+          nullable: false
+        fullCode:
+          type: string
+          minLength: 1
+          maxLength: 5
+          example: 103-07
+          nullable: false
+    BOPCodeId:
+      type: number
+      format: int32
+      minimum: 1
+      maximum: 2000
+      example: 1
+    BOPCodeList:
+      description: Collection of Balance of Payment (BoP) codes
+      type: array
+      maxLength: 2000
+      items:
+        $ref: '#/components/schemas/BOPCode'
+    IndividualList:
+      type: array
+      maxItems: 1000
+      items:
+        $ref: '#/components/schemas/IndividualLite'
+      additionalProperties: false
+    JuristicList:
+      type: array
+      maxItems: 1000
+      items:
+        $ref: '#/components/schemas/JuristicLite'
+      additionalProperties: false
+    ClientId:
+      description: Unique identifier for a client
+      type: number
+      format: integer
+      minimum: 1
+      example: 1
+      maximum: 2147483646
+    IndividualLite:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ClientId'
+        surname:
+          type: string
+          minLength: 1
+          example: Barnard
+        firstname:
+          type: string
+          minLength: 1
+          example: Willem
+        initials:
+          type: string
+          minLength: 1
+          example: WL
+        nationality:
+          type: string
+          minLength: 1
+          maxLength: 2
+          example: ZA
+        countryOfBirth:
+          type: string
+          minLength: 1
+          maxLength: 2
+          example: ZA
+      additionalProperties: false
+    JuristicLite:
+      type: object
+      properties:
+        id:
+          type: number
+          format: integer
+          minimum: 1
+          example: 1
+        name:
+          type: string
+          minLength: 0
+          example: H&M Investments
+        companyNumber:
+          type: string
+          minLength: 0
+          example: 1998/1234567/97
+        taxNumber:
+          type: string
+          minLength: 0
+          example: '9416168161'
+        vatNumber:
+          type: string
+          minLength: 0
+          example: '4510243970'
+      additionalProperties: false
+    ClientsFiltered:
+      description: A filtered list of clients with separate individual and juristic lists.
+      type: object
+      properties:
+        filterBank:
+          $ref: '#/components/schemas/BankId'
+        filterJV:
+          $ref: '#/components/schemas/JVPartnerId'
+        individuals:
+          $ref: '#/components/schemas/IndividualList'
+        juristics:
+          $ref: '#/components/schemas/JuristicList'
+      additionalProperties: false
+    Currency:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/CurrencyCode'
+        today:
+          type: number
+          format: double
+          example: 1595.34
+        thisWeek:
+          type: number
+          format: double
+          example: 17595.34
+        thisWeekPercentile:
+          type: number
+          format: double
+          example: 1.9
+        thisMonth:
+          type: number
+          format: double
+          example: 34595.25
+        thisMonthPercentile:
+          type: number
+          format: double
+          example: 17595.34
+        lastWeek:
+          type: array
+          maxItems: 7
+          items:
+            type: number
+            format: double
+            minimum: 0
+            example:
+              - 73530.2
+              - 100456.97
+              - 27320.3
+              - 31520.67
+              - 55155.89
+              - 81278.21
+      additionalProperties: false
+    CurrencyCode:
+      description: >-
+        [ISO standard 3 digit country
+        code](https://www2.1010data.com/documentationcenter/beta/1010dataReferenceManual/DataTypesAndFormats/currencyUnitCodes.html)
+      type: string
+      minLength: 1
+      maxLength: 3
+      nullable: true
+      example: USD
+      additionalProperties: false
+    CurrencyISO:
+      description: A standard ISO currency description
+      type: object
+      properties:
+        alpha-2:
+          description: >-
+            [ISO standard 2 digit country
+            code](https://www.iban.com/country-codes)
+          type: string
+          minLength: 1
+          maxLength: 2
+          nullable: false
+          example: US
+        alpha-3:
+          $ref: '#/components/schemas/CurrencyCode'
+        name:
+          description: Full name of the currency
+          type: string
+          minLength: 1
+          nullable: false
+          example: US Dollar
+    CurrencyISOList:
+      description: A collection of currencies
+      type: array
+      items:
+        $ref: '#/components/schemas/CurrencyISO'
+    Document:
+      description: A document as a base64 encoded string"
+      type: object
+      properties:
+        document:
+          type: string
+          format: byte
+      additionalProperties: false
+    DocumentId:
+      description: A unique document identifier."
+      type: number
+      format: int64
+      minimum: 1
+      maximum: 9223372036854776000
+      example: 6
+      additionalProperties: false
+    DocumentList:
+      description: A collection of document meta data
+      type: array
+      items:
+        $ref: '#/components/schemas/DocumentMeta'
+    DocumentMeta:
+      description: The metadata for a document
+      properties:
+        id:
+          $ref: '#/components/schemas/DocumentId'
+        name:
+          type: string
+          minLength: 0
+          maxLength: 1024
+          example: ALWAYS UPLOAD.pdf
+    ErrorResponse:
+      description: Error response object to give more info with HTTP status code
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+      additionalProperties: false
+    ImageUrl:
+      description: Internet resolvable path to an image
+      type: string
+      minLength: 0
+      nullable: true
+      example: >-
+        https://www.investec.com/etc/designs/dotcom/images/social/social-zebra.jpg
+      additionalProperties: false
+    JVShortName:
+      description: Joint Venture Partner short name
+      type: string
+      minLength: 1
+      maxLength: 2
+      nullable: true
+      example: GR
+      additionalProperties: false
+    JVPartner:
+      description: A Joint Venture (JV) Partner
+      type: object
+      required:
+        - id
+        - shortName
+        - longName
+      properties:
+        id:
+          $ref: '#/components/schemas/JVPartnerId'
+        shortName:
+          $ref: '#/components/schemas/JVShortName'
+        longName:
+          type: string
+          minLength: 1
+          maxLength: 255
+          nullable: true
+          example: Erik Bester
+      additionalProperties: false
+    JVPartnerId:
+      description: Unique identifier for Joint Venture Partner
+      type: number
+      format: int32
+      minimum: 1
+      maximum: 2147483646
+      example: 7
+    JVPartnerList:
+      description: A collection of Joint Venture Partners
+      type: array
+      maxItems: 1000
+      items:
+        $ref: '#/components/schemas/JVPartner'
+    PaginationHeaderResponse:
+      description: >-
+        This is the standard response for requests that have paginated
+        collections
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483646
+          description: The total number of pages in the result set
+        count:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483646
+          description: The total number of results in the result set
+        size:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1000
+          default: 10
+          description: >-
+            The number items to include in a page of results. The page size for
+            the result set
+        current:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2147483646
+          description: >-
+            The position of the page in the paged result set that is being
+            returned
+        first:
+          type: string
+          format: url
+          description: >-
+            The link to the first page of results containing [size] results.
+            This link includes the page, size, filter, orderBy and fields query
+            parameters.
+        last:
+          type: string
+          format: url
+          description: >-
+            The link to the last page of results containing [size] results. This
+            link includes the page, size, filter, orderBy and fields query
+            parameters.
+        prev:
+          type: string
+          format: url
+          description: >-
+            The link to the previous page of results containing [size] results.
+            This link includes the page, size, filter, orderBy and fields query
+            parameters. If this is the first page in the result set then this
+            will be [null].
+        next:
+          type: string
+          format: url
+          description: >-
+            The link to the next page of results containing [size] results. This
+            link includes the page, size, filter, orderBy and fields query
+            parameters. If this is the last page in the result set then this
+            will be [null].
+      additionalProperties: false
+    SendBody:
+      type: object
+      properties:
+        emails:
+          type: array
+          maxItems: 1000
+          items:
+            $ref: '#/components/schemas/SendObject'
+        whatsapps:
+          maxItems: 1000
+          type: array
+          items:
+            $ref: '#/components/schemas/SendObject'
+        sms:
+          maxItems: 1000
+          type: array
+          items:
+            $ref: '#/components/schemas/SendObject'
+    SendObject:
+      type: object
+      properties:
+        recipient:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+        attachmentAddresses:
+          type: array
+          items:
+            type: string
+    TradeFrequency:
+      type: object
+      properties:
+        name:
+          description: 'Name of the aggregate, either Bank or Trader name'
+          type: string
+          example: Investec
+        image:
+          $ref: '#/components/schemas/ImageUrl'
+        currencies:
+          description: >-
+            A collection of currency objects that indicate the Trade Frequencies
+            for the selected Aggregate
+          type: array
+          items:
+            $ref: '#/components/schemas/Currency'
+    Trade:
+      description: A trade
+      type: object
+      required:
+        - id
+        - bank
+        - customerName
+      properties:
+        id:
+          type: number
+          format: int64
+          minimum: 1
+          example: 1
+        bankId:
+          $ref: '#/components/schemas/BankId'
+        customerName:
+          type: string
+          minLength: 1
+        customerNotification:
+          $ref: '#/components/schemas/DocumentId'
+        valueDate:
+          type: string
+          format: date-time
+          example: '2020/12/18 11:28:30.000'
+        tradeAmountCurrency:
+          $ref: '#/components/schemas/CurrencyCode'
+        tradeAmount:
+          type: number
+          format: double
+          example: 495000
+        execRate:
+          type: number
+          format: double
+          example: 15.04
+        fxAmount:
+          type: number
+          format: double
+          example: 32912.23
+        fxCurrency:
+          $ref: '#/components/schemas/CurrencyCode'
+        dealerId:
+          $ref: '#/components/schemas/DealerId'
+        jvPartnerId:
+          $ref: '#/components/schemas/JVPartnerId'
+        tradingAccountBalance:
+          type: number
+          format: double
+          example: 500040.93
+        bopCodeId:
+          $ref: '#/components/schemas/BOPCodeId'
+        status:
+          $ref: '#/components/schemas/TradeStatus'
+        notes:
+          type: string
+          minLength: 0
+          example: Client notes
+        alert:
+          type: boolean
+          default: false
+    TradeSubmit:
+      description: A new trade
+      type: object
+      required:
+        - bankId
+        - clientId
+      properties:
+        bankId:
+          $ref: '#/components/schemas/BankId'
+        clientId:
+          type: number
+          format: int64
+          minimum: 1
+          nullable: false
+          example: 4
+        valueDate:
+          type: string
+          format: date-time
+          example: '2020/12/18 11:28:30.000'
+        tradeAmountCurrency:
+          $ref: '#/components/schemas/CurrencyCode'
+        tradeAmount:
+          type: number
+          format: double
+          minimum: 0
+          example: 495000
+        execRate:
+          type: number
+          format: double
+          minimum: 0
+          example: 15.04
+        fxAmount:
+          type: number
+          format: double
+          minimum: 0
+          example: 32912.23
+        fxCurrency:
+          $ref: '#/components/schemas/CurrencyCode'
+        bopCodeId:
+          $ref: '#/components/schemas/BOPCodeId'
+        notes:
+          type: string
+          minLength: 0
+          example: Client notes
+    TradesFiltered:
+      description: A filtered lists of trades
+      type: object
+      properties:
+        filterStatus:
+          $ref: '#/components/schemas/TradeStatus'
+        filterBank:
+          $ref: '#/components/schemas/BankId'
+        filterJV:
+          $ref: '#/components/schemas/JVPartnerId'
+        trades:
+          type: array
+          maxItems: 1000
+          items:
+            $ref: '#/components/schemas/Trade'
+    Dealer:
+      description: A dealer (trader) who is able to book trades and all related tasks
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/DealerId'
+        name:
+          description: Name of the Dealer (Trader)
+          type: string
+          example: Paul Kruger
+        shortname:
+          description: A two letter abbreviation of the Dealer Name
+          type: string
+          minLength: 1
+          maxLength: 2
+          example: PK
+    DealerId:
+      description: Unique identifier of the Dealer (Trader)
+      type: number
+      format: int32
+      minimum: 1
+      maximum: 2147483646
+      example: 3
+    DealerList:
+      description: A collection of the Dealer (Trader)
+      type: array
+      maxItems: 1000
+      items:
+        $ref: '#/components/schemas/Dealer'
+    TradeStatus:
+      description: The possible states of a trade
+      type: string
+      minLength: 1
+      maxLength: 255
+      nullable: false
+      example:
+        - funds_arrived
+        - fx_instruction
+        - rate_confirmed
+        - RPA_got_balance
+        - RPA_get_balance_failed
+        - BOP_code_confirmed
+        - trade_confirmed
+        - trade_submitted
+        - trade_submission_failed
+        - trade_notification
+        - BOP_form_completed
+        - BOP_form_uploaded
+        - BOP_upload_failed
+        - ban_completion
+        - trade_client_confirmation
+        - trade_finalized
+        - trade_archived

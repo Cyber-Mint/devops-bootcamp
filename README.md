@@ -133,7 +133,7 @@ mysql> source /sql/mydatabase.sql
 ## S01.E04: OpenAPI & Swagger & Postman
 
 ### Prep
-- ensure autogeneration is working properly
+- ensure auto-generation is working properly
 - create generic ToDo Swagger
 - create postman test & environment
 
@@ -144,7 +144,7 @@ mysql> source /sql/mydatabase.sql
 - install postman
 - install openAPI tools - `https://openapi-generator.tech/docs/installation`
    ** java version first
-- autogenerate openAPI (Java)
+- auto-generate openAPI (Java)
 - add simple API to application & integration tests
 - implement REST methods that were auto generated from swagger
 
